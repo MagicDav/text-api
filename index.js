@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 // Rotas de passageiros
-app.use("/passageiros", passageirosRoutes);
+app.use("/api/passageiros", passageirosRoutes);
 
 // Inicia o servidor
 app.listen(port, () => console.log(`App rodando na porta ${port}`));
