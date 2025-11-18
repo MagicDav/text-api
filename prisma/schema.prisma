@@ -1,0 +1,20 @@
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+model passageiros {
+  id        String   @id @default(uuid())
+  nome      String
+  destino   String
+  morada    String
+  qrcode    String
+  status    Boolean
+  createdAt DateTime @default(now())
+}

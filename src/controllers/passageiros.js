@@ -1,0 +1,77 @@
+import QRCode from "qrcode";
+import jwt from "jsonwebtoken";
+import  {PrismaClient}  from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+// Cadastrar passageiro e gerar QR Code
+export const cadastrarPassageiro = async (req, res) => {
+  try {
+    const { nome, destino, morada } = req.body;
+
+    if (!nome || !destino || !morada) {
+      return res.status(400).json({ error: "Todos os campos são obrigatórios" });
+    }
+
+    const token = jwt.sign({ nome, destino, morada }, "kalepa#$%magic~~~s", {
+      expiresIn: "1h",
+    });
+
+    const qrCodeData = await QRCode.toDataURL(token);
+
+    const passageiro = await prisma.passageiros.create({
+      data: {
+        nome,
+        destino,
+        morada,
+        qrcode: qrCodeData,
+        status: false,
+      },
+    });
+
+    res.json({
+      message: "Passageiro cadastrado e QR Code gerado!",
+      passageiro,
+      token,
+    });
+  } catch (err) {
+    if (err.code === "P2002" && err.meta?.target?.includes("qrcode")) {
+      return res.status(400).json({ error: "QR Code já existe!" });
+    }
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Validar QR Code e abrir catraca
+export const validarQRCode = async (req, res) => {
+  try {
+    const { qrcode } = req.body;
+
+    if (!qrcode) {
+      return res.status(400).json({ error: "QR Code é obrigatório" });
+    }
+
+    const passageiro = await prisma.passageiros.findFirst({
+      where: { qrcode },
+    });
+
+    if (!passageiro) {
+      return res.status(404).json({ error: "QR Code não existe ou é inválido" });
+    }
+
+    if (passageiro.status) {
+      return res.status(400).json({ error: "QR Code já utilizado" });
+    }
+
+    await prisma.passageiros.update({
+      where: { id: passageiro.id },
+      data: { status: true },
+    });
+
+    res.json({ success: true, message: "Catraca aberta!", passageiro });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};

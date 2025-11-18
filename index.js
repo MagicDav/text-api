@@ -1,4 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
+import passageirosRoutes from "./src/routes/passageiros.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -7,6 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
+//console.log("log:_",process.env.DATABASE_URL);
 
 // Rotas principais
 app.get("/", (req, res) => {
@@ -20,6 +24,8 @@ app.get("/", (req, res) => {
   `.trim());
 });
 
+// Rotas de passageiros
+app.use("/passageiros", passageirosRoutes);
 
 // Inicia o servidor
 app.listen(port, () => console.log(`App rodando na porta ${port}`));
