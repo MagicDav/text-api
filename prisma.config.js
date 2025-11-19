@@ -4,6 +4,7 @@ require("dotenv").config()
 
 export default defineConfig({
   schema: "./prisma/schema.prisma",
+   dotenv: true,
   generators: [
     {
       provider: "prisma-client",
