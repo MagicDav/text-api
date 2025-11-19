@@ -18,3 +18,11 @@ model passageiros {
   status    Boolean
   createdAt DateTime @default(now())
 }
+model users {
+  id        String   @id @default(uuid())
+  nome      String
+  email     String   @unique
+  senha     String
+  tipo      String
+  createdAt DateTime @default(now())
+}

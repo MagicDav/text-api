@@ -1,5 +1,6 @@
 import express from "express";
 import passageirosRoutes from "./src/routes/passageiros.routes.js";
+import usersRoutes from "./src/routes/usuarios.routes.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -8,8 +9,9 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
-//console.log("log:_",process.env.DATABASE_URL);
-console.log("DATABASE_URL =>", process.env.DATABASE_URL);
+
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 // Rotas principais
 app.get("/", (req, res) => {
@@ -25,6 +27,7 @@ app.get("/", (req, res) => {
 
 // Rotas de passageiros
 app.use("/api/passageiros", passageirosRoutes);
+app.use("/api/auth", usersRoutes);
 
 // Inicia o servidor
 app.listen(port, () => console.log(`App rodando na porta ${port}`));
