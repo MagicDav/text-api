@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(express.raw({ type: "application/vnd.custom-type" }));
 app.use(express.text({ type: "text/html" }));
 //console.log("log:_",process.env.DATABASE_URL);
+console.log("DATABASE_URL =>", process.env.DATABASE_URL);
 
 // Rotas principais
 app.get("/", (req, res) => {
