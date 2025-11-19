@@ -1,8 +1,15 @@
 import "dotenv/config";
 import { defineConfig, env } from "prisma/config";
 require("dotenv").config()
+
 export default defineConfig({
   schema: "./prisma/schema.prisma",
+  generators: [
+    {
+      provider: "prisma-client",
+      output: "./src/generated/prisma"
+    },
+  ],
   migrations: {
     path: "prisma/migrations",
   },

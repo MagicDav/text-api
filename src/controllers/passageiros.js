@@ -1,6 +1,8 @@
 import QRCode from "qrcode";
 import jwt from "jsonwebtoken";
+import { PrismaClient } from "../generated/prisma/index.js";
 
+const prisma = new PrismaClient();
 
 // Cadastrar passageiro e gerar QR Code
 export const cadastrarPassageiro = async (req, res) => {
